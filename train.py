@@ -25,7 +25,7 @@ model = Sequential([
 ])
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['acc'])
 
-TRAINING_DIR = './train'
+TRAINING_DIR = 'Dataset/train'
 
 train_datagen = ImageDataGenerator(rescale=1.0/255,
                                    rotation_range=40,
@@ -36,6 +36,20 @@ train_datagen = ImageDataGenerator(rescale=1.0/255,
                                    horizontal_flip=True,
                                    fill_mode='nearest')
 
-train_generator = train_generator.flow_from_directory(TRAINING_DIR, batch_size=10, target_size=(150, 150))
+train_generator = train_generator.flow_from_directory(
+    TRAINING_DIR, batch_size=10, target_size=(150, 150))
 
-VALIDATION_DIR = 'Dataset/test.zip'
+VALIDATION_DIR = 'Dataset/test'
+validation_datagen = ImageDataGenerator(rescale=1.0/255)
+
+validation_generator = validation_generator.flow_from_directory(
+    VALIDATION_DIR, batch_size=10, target_size=(150, 150))
+
+checkpoint = ModelCheckpoint(
+    'model2-{epoch:03d}.model', monitor='val_loss', verbose=0, save_best_only=True, mode='auto')
+
+history = model.fit_generator(train_generator,
+                              epochs=10,
+                              validation_data=validation_generator,
+                              callbacks=[checkpoint])
+
