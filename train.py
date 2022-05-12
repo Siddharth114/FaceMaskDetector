@@ -35,3 +35,7 @@ train_datagen = ImageDataGenerator(rescale=1.0/255,
                                    zoom_range=0.2,
                                    horizontal_flip=True,
                                    fill_mode='nearest')
+
+train_generator = train_generator.flow_from_directory(TRAINING_DIR, batch_size=10, target_size=(150, 150))
+
+VALIDATION_DIR = 'Dataset/test.zip'
